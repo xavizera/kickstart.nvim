@@ -200,6 +200,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+vim.keymap.set('n', '<leader>rc', function()
+  vim.cmd 'w'
+  vim.cmd '!gcc % -o %<'
+  vim.cmd 'split | terminal ./%<'
+end)
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -240,7 +246,6 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-  'nvim-neo-tree/neo-tree.nvim',
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -259,6 +264,20 @@ require('lazy').setup({
     ---@module "neo-tree"
     ---@type neotree.Config?
     opts = {},
+  },
+  {
+    'dense-analysis/ale',
+    config = function()
+        -- Configuration goes here.
+        local g = vim.g
+
+        g.ale_ruby_rubocop_auto_correct_all = 1
+
+        g.ale_linters = {
+            ruby = {'rubocop', 'ruby'},
+            lua = {'lua_language_server'}
+        }
+    end
   },
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
